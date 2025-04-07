@@ -5,8 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MemoGame"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="650" Width="1000">
+    <Border Background="#FF202020" CornerRadius="8" BorderThickness="0.5" BorderBrush="White">
 
-    </Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <local:TitleBar x:Name="TitleBar" Grid.Row="0" />
+            <local:MenuBar x:Name="MenuBar" Grid.Row="1" Margin="0,0,0,20"/>
+
+
+            <Frame Grid.Row="2" x:Name="Main" NavigationUIVisibility="Hidden"/>
+        </Grid>
+    </Border>
 </Window>
