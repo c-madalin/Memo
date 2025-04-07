@@ -19,7 +19,7 @@
             <local:TitleBar x:Name="TitleBar" Grid.Row="0" />
 
 
-            <Frame Grid.Row="2" x:Name="Main" NavigationUIVisibility="Hidden"/>
+            <Frame x:Name="SignIn" Grid.Row="1"  NavigationUIVisibility="Hidden"/>
         </Grid>
     </Border>
 </Window>
