@@ -4,9 +4,192 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MemoryGame.View"
+        xmlns:vm="clr-namespace:MemoryGame.ViewModel"
         mc:Ignorable="d"
-        Title="GameWindow" Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Title="memo" 
+        Height="800" 
+        Width="1000"
+        WindowStartupLocation="CenterScreen"
+        Background="#3A3A3A"
+        AllowsTransparency="True"
+        WindowStyle="None">
+
+    <Window.Resources>
+        <Style x:Key="GameButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Background" Value="#4A4A4A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#5A5A5A"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#3A3A3A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Card Template -->
+        <DataTemplate x:Key="CardTemplate">
+            <Button Command="{Binding ClickCommand}" 
+                    Width="100" 
+                    Height="100" 
+                    Margin="5">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="CardBorder" 
+                                CornerRadius="5" 
+                                BorderThickness="2" 
+                                BorderBrush="#454545"
+                                Background="#2A2A2A">
+                            <Grid>
+                                <!-- Card Back (shown when not flipped) -->
+                                <Border x:Name="CardBack" 
+                                        Background="#3A3A3A" 
+                                        CornerRadius="5" 
+                                        Visibility="Visible">
+                                    <TextBlock Text="?" 
+                                               FontSize="40" 
+                                               Foreground="White" 
+                                               HorizontalAlignment="Center" 
+                                               VerticalAlignment="Center"/>
+                                </Border>
+
+                                <!-- Card Front (shown when flipped) -->
+                                <Border x:Name="CardFront" 
+                                        Background="#4A4A4A" 
+                                        CornerRadius="5" 
+                                        Visibility="Collapsed">
+                                    <Image Source="{Binding ImagePath}" 
+                                           Stretch="Uniform" 
+                                           Margin="10"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="CardBorder" Property="BorderBrush" Value="#999999"/>
+                            </Trigger>
+                            <DataTrigger Binding="{Binding IsFlipped}" Value="True">
+                                <Setter TargetName="CardBack" Property="Visibility" Value="Collapsed"/>
+                                <Setter TargetName="CardFront" Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsMatched}" Value="True">
+                                <Setter TargetName="CardBorder" Property="Opacity" Value="0.3"/>
+                            </DataTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Border Background="#3a3a3a" CornerRadius="8" BorderThickness="0.5" BorderBrush="White">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <local:TitleBar x:Name="TitleBar" Grid.Row="0" />
+
+            <!-- Game Info -->
+            <Grid Grid.Row="1" Margin="20,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Text="{Binding GameStatus}"
+                           Foreground="White"
+                           FontSize="18"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"/>
+
+                <TextBlock Grid.Column="1"
+                           Text="{Binding TimeDisplay}"
+                           Foreground="White"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+
+                <StackPanel Grid.Column="2"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <Button Content="Save Game"
+                            Command="{Binding SaveGameCommand}"
+                            Style="{StaticResource GameButtonStyle}"
+                            Width="100"
+                            Margin="5,0"/>
+                    <Button Content="Exit"
+                            Command="{Binding ExitGameCommand}"
+                            Style="{StaticResource GameButtonStyle}"
+                            Width="80"
+                            Margin="5,0"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Game Board -->
+            <Border Grid.Row="2"
+                    Background="#2A2A2A"
+                    Margin="20,0,20,10"
+                    CornerRadius="10">
+                <ItemsControl ItemsSource="{Binding Cards}"
+                              ItemTemplate="{StaticResource CardTemplate}"
+                              Margin="20">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="{Binding Rows}" Columns="{Binding Columns}"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Border>
+
+            <!-- Game Over Message -->
+            <Border Grid.Row="2"
+                    Background="#3A3A3A"
+                    Opacity="0.9"
+                    Visibility="{Binding IsGameOver, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Margin="20,0,20,10"
+                    CornerRadius="10">
+                <StackPanel VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+                    <TextBlock Text="{Binding GameStatus}"
+                               FontSize="36"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               TextAlignment="Center"/>
+                    <Button Content="Return to Menu"
+                            Command="{Binding ExitGameCommand}"
+                            Style="{StaticResource GameButtonStyle}"
+                            Width="200"
+                            Height="50"
+                            Margin="0,30,0,0"
+                            FontSize="18"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
 </Window>
