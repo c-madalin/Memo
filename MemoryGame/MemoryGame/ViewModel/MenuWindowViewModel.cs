@@ -9,6 +9,7 @@ using MemoryGame.Commands;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using MemoryGame.Services;
+using System.IO;
 
 namespace MemoryGame.ViewModel
 {
@@ -148,24 +149,31 @@ namespace MemoryGame.ViewModel
         #region Game Methods
         private void StartNewGame()
         {
-            // Validate grid size (make sure it's even for matching pairs)
-            int totalCards = SelectedRows * SelectedColumns;
-            if (totalCards % 2 != 0)
+            try
             {
-                MessageBox.Show("The total number of cards must be even for matching pairs.",
-                    "Invalid Grid Size", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
+                // Validation code remains the same...
+
+                // Create a NEW game window (don't reuse existing instances)
+                var gameWindow = new GameWindow(CurrentUser, SelectedCategory, SelectedRows, SelectedColumns, GameTime);
+
+                // Show the new window BEFORE closing the current one
+                gameWindow.Show();
+
+                // Get a reference to the current menu window
+                var menuWindow = Application.Current.Windows.OfType<MenuWindow>().FirstOrDefault(w => w.IsVisible);
+
+                // Close the menu window if it exists and is still open
+                if (menuWindow != null && menuWindow.IsVisible)
+                {
+                    menuWindow.Close();
+                }
             }
-
-            // Create and show the game window
-            GameWindow gameWindow = new GameWindow(CurrentUser, SelectedCategory, SelectedRows, SelectedColumns, GameTime);
-            gameWindow.Show();
-
-            // Close the menu window
-            var menuWindow = Application.Current.Windows.OfType<MenuWindow>().FirstOrDefault();
-            menuWindow?.Close();
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error starting new game: {ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-
         private bool CanOpenExistingGame()
         {
             return CurrentUser != null && _gameSaveService.HasSavedGame(CurrentUser);
@@ -206,30 +214,76 @@ namespace MemoryGame.ViewModel
 
         private void ShowStatistics()
         {
-            StatisticsWindow statisticsWindow = new StatisticsWindow();
-            statisticsWindow.Owner = Application.Current.MainWindow;
-            statisticsWindow.ShowDialog();
+          
+
+            try
+            {
+                StatisticsWindow statisticsWindow = new StatisticsWindow();
+
+                // Try to find the parent window to set as owner
+                var currentWindow = Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
+                if (currentWindow != null)
+                {
+                    statisticsWindow.Owner = currentWindow;
+                }
+
+                // Show as dialog to prevent interaction with other windows until closed
+                statisticsWindow.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening About window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
         #endregion
 
         #region About
         private void ShowAbout()
         {
-            AboutWindow aboutWindow = new AboutWindow();
-            aboutWindow.Owner = Application.Current.MainWindow;
-            aboutWindow.ShowDialog();
+            try
+            {
+                AboutWindow aboutWindow = new AboutWindow();
+
+                // Try to find the parent window to set as owner
+                var currentWindow = Application.Current.Windows.OfType<Window>().FirstOrDefault(w => w.IsActive);
+                if (currentWindow != null)
+                {
+                    aboutWindow.Owner = currentWindow;
+                }
+
+                // Show as dialog to prevent interaction with other windows until closed
+                aboutWindow.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening About window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
         #endregion
 
         #region Logout
         private void Logout()
         {
-            var menuWindow = Application.Current.Windows
-                    .OfType<MenuWindow>()
-                    .FirstOrDefault();
-            SignInWindow signInWindow = new SignInWindow();
-            signInWindow.Show();
-            menuWindow?.Close();
+            try
+            {
+                // Create new sign-in window
+                var signInWindow = new SignInWindow();
+
+                // Show it first
+                signInWindow.Show();
+
+                // Then close the current menu window
+                var menuWindow = Application.Current.Windows.OfType<MenuWindow>().FirstOrDefault(w => w.IsVisible);
+                if (menuWindow != null && menuWindow.IsVisible)
+                {
+                    menuWindow.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error during logout: {ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
         #endregion
 

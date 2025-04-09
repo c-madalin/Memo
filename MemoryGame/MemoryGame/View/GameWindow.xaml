@@ -159,12 +159,16 @@
                     Background="#2A2A2A"
                     Margin="20,0,20,10"
                     CornerRadius="10">
+                <!-- Update the ItemsControl in GameWindow.xaml -->
                 <ItemsControl ItemsSource="{Binding Cards}"
-                              ItemTemplate="{StaticResource CardTemplate}"
-                              Margin="20">
+              ItemTemplate="{StaticResource CardTemplate}"
+              Margin="20">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <UniformGrid Rows="{Binding Rows}" Columns="{Binding Columns}"/>
+                            <!-- We need to explicitly bind the Rows and Columns properties -->
+                            <UniformGrid x:Name="GameGrid" 
+                         Rows="{Binding RowCount}" 
+                         Columns="{Binding ColumnCount}"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>

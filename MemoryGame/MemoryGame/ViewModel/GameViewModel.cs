@@ -40,6 +40,8 @@ namespace MemoryGame.ViewModel
         private bool _isGameLoaded;
         #endregion
 
+        public int RowCount => _rows;
+        public int ColumnCount => _columns;
         #region Properties
         public ObservableCollection<CardViewModel> Cards
         {
@@ -150,65 +152,81 @@ namespace MemoryGame.ViewModel
         #region Game Logic
         private void InitializeGame()
         {
-            // Create pairs of cards
-            var cardPairs = new List<CardViewModel>();
-
-            // Take as many images as needed for pairs
-            var neededPairs = (_rows * _columns) / 2;
-            var selectedImages = new List<string>();
-
-            if (_imageFiles.Count > 0)
+            try
             {
-                // We need to make sure we have enough images
+                // Calculate how many pairs we need
+                int neededPairs = (_rows * _columns) / 2;
+
+                // Ensure the grid can fit pairs (total cells must be even)
+                if (_rows * _columns % 2 != 0)
+                {
+                    MessageBox.Show("The grid must have an even number of cells to create pairs.",
+                        "Invalid Grid Size", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Check if we have enough images
+                if (_imageFiles == null || _imageFiles.Count == 0)
+                {
+                    MessageBox.Show($"No images found for category {_category}.",
+                        "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Create a list of image paths that will be used for pairs
+                var selectedImages = new List<string>();
+
+                // If we don't have enough images, reuse them as needed
                 if (_imageFiles.Count < neededPairs)
                 {
-                    // If not enough images, we'll repeat some
+                    // Keep adding images until we have enough
+                    int currentIndex = 0;
                     while (selectedImages.Count < neededPairs)
                     {
-                        selectedImages.AddRange(_imageFiles);
+                        selectedImages.Add(_imageFiles[currentIndex % _imageFiles.Count]);
+                        currentIndex++;
                     }
-                    // Trim to exact count needed
-                    selectedImages = selectedImages.Take(neededPairs).ToList();
                 }
                 else
                 {
-                    // Randomly select images
+                    // Randomly select images without replacement
                     var random = new Random();
-                    selectedImages = _imageFiles.OrderBy(x => random.Next()).Take(neededPairs).ToList();
+                    var shuffledImages = _imageFiles.OrderBy(x => random.Next()).ToList();
+                    selectedImages = shuffledImages.Take(neededPairs).ToList();
                 }
+
+                // Create card pairs
+                var cardPairs = new List<CardViewModel>();
+                for (int i = 0; i < selectedImages.Count; i++)
+                {
+                    var imagePath = selectedImages[i];
+
+                    // Create first card
+                    var card1 = new CardViewModel(i * 2, imagePath);
+                    card1.CardClicked += Card_Clicked;
+
+                    // Create second card (matching pair)
+                    var card2 = new CardViewModel(i * 2 + 1, imagePath);
+                    card2.CardClicked += Card_Clicked;
+
+                    cardPairs.Add(card1);
+                    cardPairs.Add(card2);
+                }
+
+                // Randomize card positions
+                var random2 = new Random();
+                Cards = new ObservableCollection<CardViewModel>(cardPairs.OrderBy(x => random2.Next()));
+
+                // Start timer
+                _isTimerRunning = true;
+                _gameTimer.Start();
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show($"No image files found for category {_category}.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                MessageBox.Show($"Error initializing game: {ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            // Create card pairs
-            for (int i = 0; i < selectedImages.Count; i++)
-            {
-                var imagePath = selectedImages[i];
-
-                // Create first card
-                var card1 = new CardViewModel(i * 2, imagePath);
-                card1.CardClicked += Card_Clicked;
-
-                // Create second card (matching pair)
-                var card2 = new CardViewModel(i * 2 + 1, imagePath);
-                card2.CardClicked += Card_Clicked;
-
-                cardPairs.Add(card1);
-                cardPairs.Add(card2);
-            }
-
-            // Randomize card positions
-            var random2 = new Random();
-            Cards = new ObservableCollection<CardViewModel>(cardPairs.OrderBy(x => random2.Next()));
-
-            // Start timer
-            _isTimerRunning = true;
-            _gameTimer.Start();
         }
-
         private void Card_Clicked(object sender, EventArgs e)
         {
             if (!_canFlipCard || IsGameOver) return;
@@ -392,28 +410,45 @@ namespace MemoryGame.ViewModel
             OnPropertyChanged(nameof(GameStatus));
         }
 
+        // In GameViewModel.ExitGame method:
         private void ExitGame()
         {
-            if (!IsGameOver)
+            try
             {
-                var result = MessageBox.Show("Are you sure you want to quit the current game? You can save your progress before exiting.",
-                    "Confirm Exit", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
-
-                if (result == MessageBoxResult.Cancel)
-                    return;
-
-                if (result == MessageBoxResult.Yes)
+                if (!IsGameOver)
                 {
-                    SaveGame();
+                    var result = MessageBox.Show("Are you sure you want to quit the current game? You can save your progress before exiting.",
+                        "Confirm Exit", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+
+                    if (result == MessageBoxResult.Cancel)
+                        return;
+
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        SaveGame();
+                    }
+                }
+
+                _gameTimer.Stop();
+
+                // Create new menu window
+                var menuWindow = new MenuWindow();
+
+                // Show it first
+                menuWindow.Show();
+
+                // Then close the game window
+                var gameWindow = Application.Current.Windows.OfType<GameWindow>().FirstOrDefault(w => w.IsVisible);
+                if (gameWindow != null && gameWindow.IsVisible)
+                {
+                    gameWindow.Close();
                 }
             }
-
-            _gameTimer.Stop();
-
-            var gameWindow = Application.Current.Windows.OfType<GameWindow>().FirstOrDefault();
-            MenuWindow menuWindow = new MenuWindow();
-            menuWindow.Show();
-            gameWindow?.Close();
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error exiting game: {ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
         #endregion
 
