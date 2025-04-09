@@ -1,25 +1,19 @@
 [
   {
-    "Username": "asgfasfg",
-    "AvatarPath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\avatar\\av4.jpg",
+    "Username": "Madalin",
+    "AvatarPath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\avatar\\av1.jpg",
     "GamesWon": 0,
     "GamesPlayed": 0
   },
   {
-    "Username": "sfagafg",
-    "AvatarPath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\avatar\\av8.jpg",
+    "Username": "Paul",
+    "AvatarPath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\avatar\\av7.jpg",
     "GamesWon": 0,
     "GamesPlayed": 0
   },
   {
-    "Username": "asfgafg",
-    "AvatarPath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\avatar\\av2.jpg",
-    "GamesWon": 0,
-    "GamesPlayed": 0
-  },
-  {
-    "Username": "sfgafg",
-    "AvatarPath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\avatar\\av3.jpg",
+    "Username": "Andi",
+    "AvatarPath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\avatar\\av6.jpg",
     "GamesWon": 0,
     "GamesPlayed": 0
   }

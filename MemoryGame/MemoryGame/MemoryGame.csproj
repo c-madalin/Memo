@@ -10,13 +10,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Model\**" />
+    <EmbeddedResource Remove="Model\**" />
+    <None Remove="Model\**" />
+    <Page Remove="Model\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="res\avatar\av1.jpg" />
     <None Remove="res\avatar\av2.jpg" />
     <None Remove="res\icon\brain.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
     <Folder Include="Assets\" />
     <Folder Include="res\set3\" />
     <Folder Include="res\set2\" />
