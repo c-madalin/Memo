@@ -19,6 +19,7 @@ namespace MemoryGame.ViewModel
     {
         #region Private Fields
         private readonly UserDataService _userDataService;
+        private readonly GameSaveService _gameSaveService;
         private readonly string _category;
         private readonly int _rows;
         private readonly int _columns;
@@ -34,7 +35,9 @@ namespace MemoryGame.ViewModel
         private int _totalMatches;
         private int _remainingTime;
         private int _totalTime;
+        private int _elapsedTime;
         private bool _isTimerRunning;
+        private bool _isGameLoaded;
         #endregion
 
         #region Properties
@@ -92,7 +95,7 @@ namespace MemoryGame.ViewModel
         #endregion
 
         #region Constructor
-        public GameViewModel(User currentUser, string category, int rows, int columns, int gameTime = 120)
+        public GameViewModel(User currentUser, string category, int rows, int columns, int gameTime = 120, bool loadSavedGame = false)
         {
             _currentUser = currentUser ?? throw new ArgumentNullException(nameof(currentUser));
             _category = category ?? throw new ArgumentNullException(nameof(category));
@@ -101,6 +104,8 @@ namespace MemoryGame.ViewModel
             _totalTime = gameTime;
             RemainingTime = gameTime;
             _userDataService = new UserDataService();
+            _gameSaveService = new GameSaveService();
+            _elapsedTime = 0;
 
             // Set up timer
             _gameTimer = new DispatcherTimer
@@ -131,7 +136,14 @@ namespace MemoryGame.ViewModel
             SaveGameCommand = new RelayCommand(SaveGame);
             ExitGameCommand = new RelayCommand(ExitGame);
 
-            InitializeGame();
+            if (loadSavedGame)
+            {
+                LoadSavedGame();
+            }
+            else
+            {
+                InitializeGame();
+            }
         }
         #endregion
 
@@ -266,6 +278,7 @@ namespace MemoryGame.ViewModel
             if (RemainingTime > 0)
             {
                 RemainingTime--;
+                _elapsedTime++;
             }
             else
             {
@@ -297,19 +310,102 @@ namespace MemoryGame.ViewModel
         #region Game Actions
         private void SaveGame()
         {
-            // TODO: Implement game saving functionality
-            MessageBox.Show("Game saving is not implemented yet.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+            // Pause the timer
+            _gameTimer.Stop();
+
+            // Create game state to save
+            var gameState = new GameState
+            {
+                Category = _category,
+                Rows = _rows,
+                Columns = _columns,
+                RemainingTime = RemainingTime,
+                ElapsedTime = _elapsedTime,
+                TotalTime = _totalTime,
+                Cards = _cards.Select(c => new CardState
+                {
+                    Id = c.Id,
+                    ImagePath = c.ImagePath,
+                    IsFlipped = c.IsFlipped,
+                    IsMatched = c.IsMatched
+                }).ToList()
+            };
+
+            // Save the game
+            bool success = _gameSaveService.SaveGame(_currentUser, gameState);
+
+            if (success)
+            {
+                MessageBox.Show("Game saved successfully.", "Save Game", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show("Failed to save game.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+            // Resume the timer if game is not over
+            if (!IsGameOver)
+            {
+                _gameTimer.Start();
+            }
+        }
+
+        private void LoadSavedGame()
+        {
+            GameState savedGame = _gameSaveService.LoadGame(_currentUser);
+
+            if (savedGame == null)
+            {
+                // No saved game found, start a new game
+                InitializeGame();
+                return;
+            }
+
+            _isGameLoaded = true;
+            RemainingTime = savedGame.RemainingTime;
+            _elapsedTime = savedGame.ElapsedTime;
+            _totalTime = savedGame.TotalTime;
+
+            // Create cards from saved state
+            var cards = new List<CardViewModel>();
+            foreach (var cardState in savedGame.Cards)
+            {
+                var card = new CardViewModel(cardState.Id, cardState.ImagePath)
+                {
+                    IsFlipped = cardState.IsFlipped,
+                    IsMatched = cardState.IsMatched
+                };
+                card.CardClicked += Card_Clicked;
+                cards.Add(card);
+            }
+
+            Cards = new ObservableCollection<CardViewModel>(cards);
+
+            // Calculate matches found
+            _matchesFound = Cards.Count(c => c.IsMatched) / 2;
+
+            // Start the timer
+            _isTimerRunning = true;
+            _gameTimer.Start();
+
+            // Update game status
+            OnPropertyChanged(nameof(GameStatus));
         }
 
         private void ExitGame()
         {
             if (!IsGameOver)
             {
-                var result = MessageBox.Show("Are you sure you want to quit the current game?",
-                    "Confirm Exit", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                var result = MessageBox.Show("Are you sure you want to quit the current game? You can save your progress before exiting.",
+                    "Confirm Exit", MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
 
-                if (result == MessageBoxResult.No)
+                if (result == MessageBoxResult.Cancel)
                     return;
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    SaveGame();
+                }
             }
 
             _gameTimer.Stop();

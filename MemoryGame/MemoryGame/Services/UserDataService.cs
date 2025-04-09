@@ -23,7 +23,18 @@ namespace MemoryGame.Services
                 Directory.CreateDirectory(appDataFolder);
             }
 
-            _jsonFilePath = Path.Combine(appDataFolder, "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\userInfo\\users.json");
+            // Use a relative path for user data
+            string executablePath = AppDomain.CurrentDomain.BaseDirectory;
+            string projectRoot = Path.GetFullPath(Path.Combine(executablePath, @"..\..\..\"));
+            string userInfoPath = Path.Combine(projectRoot, @"res\userInfo");
+
+            // Create directory if it doesn't exist
+            if (!Directory.Exists(userInfoPath))
+            {
+                Directory.CreateDirectory(userInfoPath);
+            }
+
+            _jsonFilePath = Path.Combine(userInfoPath, "users.json");
             Console.WriteLine($"Using JSON file: {_jsonFilePath}");
         }
 
@@ -84,6 +95,13 @@ namespace MemoryGame.Services
                 };
 
                 string json = JsonSerializer.Serialize(userDtos, options);
+
+                // Ensure directory exists
+                string directory = Path.GetDirectoryName(_jsonFilePath);
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
 
                 File.WriteAllText(_jsonFilePath, json);
                 Console.WriteLine($"Saved {userDtos.Count} users to JSON file");

@@ -7,14 +7,14 @@
         xmlns:vm="clr-namespace:MemoryGame.ViewModel"
         mc:Ignorable="d"
         Title="memo" 
-        Height="800" 
+        Height="600" 
         Width="1000"
         WindowStartupLocation="CenterScreen"
         Background="#3A3A3A"
         AllowsTransparency="True"
         WindowStyle="None">
     <Window.Resources>
-        
+
         <Style x:Key="MenuButtonStyle" TargetType="Button">
             <Setter Property="Margin" Value="10"/>
             <Setter Property="Padding" Value="20,10"/>
@@ -47,7 +47,6 @@
         </Style>
 
         <!-- Style for ComboBox -->
-        <!-- Style for ComboBox with fixed dropdown colors -->
         <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
             <Setter Property="Margin" Value="10"/>
             <Setter Property="Height" Value="40"/>
@@ -85,9 +84,9 @@
                         </Setter.Value>
                     </Setter>
                 </Style>
-               
+
             </Style.Resources>
-            
+
         </Style>
 
         <!-- Style for Label -->
@@ -101,8 +100,6 @@
             <Setter Property="Width" Value="300"/>
         </Style>
 
-        <!-- Style for ComboBox with improved readability -->
-
     </Window.Resources>
 
     <Window.DataContext>
@@ -115,17 +112,26 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <local:TitleBar x:Name="TitleBar" Grid.Row="0" />
+
+            <!-- Main Content Grid with Two Columns -->
             <Grid Grid.Row="1">
-                <StackPanel
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Column - Settings Panel -->
+                <StackPanel Grid.Column="0"
                     Background="#3A3A3A" 
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center">
 
                     <TextBlock 
-                        Text="Menu" 
+                        Text="Game Settings" 
                         FontSize="24" 
                         FontWeight="Bold" 
                         Foreground="White"
@@ -151,7 +157,7 @@
                         Margin="10,20,10,0"/>
                     <ComboBox 
                         Style="{StaticResource ComboBoxStyle}"
-                        SelectedIndex="3"
+                        SelectedIndex="2"
                         ItemsSource="{Binding GridSizes}" 
                         SelectedItem="{Binding SelectedRows}">
                     </ComboBox>
@@ -162,16 +168,43 @@
                         Margin="10,20,10,0"/>
                     <ComboBox 
                         Style="{StaticResource ComboBoxStyle}"
-                        SelectedIndex="3"
+                        SelectedIndex="2"
                         ItemsSource="{Binding GridSizes}" 
                         SelectedItem="{Binding SelectedColumns}">
                     </ComboBox>
+
+                    <!-- Game Time Selection -->
+                    <Label 
+                        Content="Game Time (seconds):" 
+                        Style="{StaticResource LabelStyle}" 
+                        Margin="10,20,10,0"/>
+                    <ComboBox 
+                        Style="{StaticResource ComboBoxStyle}"
+                        SelectedIndex="1"
+                        ItemsSource="{Binding TimeOptions}" 
+                        SelectedItem="{Binding GameTime}">
+                    </ComboBox>
+                </StackPanel>
+
+                <!-- Right Column - Action Buttons -->
+                <StackPanel Grid.Column="1"
+                    Background="#3A3A3A" 
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+
+                    <TextBlock 
+                        Text="Actions" 
+                        FontSize="24" 
+                        FontWeight="Bold" 
+                        Foreground="White"
+                        HorizontalAlignment="Center"
+                        Margin="0,20,0,30"/>
 
                     <Button 
                         Content="New Game" 
                         Style="{StaticResource MenuButtonStyle}"
                         Command="{Binding NewGameCommand}"
-                        Margin="10,30,10,10"/>
+                        Margin="10,10,10,10"/>
 
                     <Button 
                         Content="Open Game" 
@@ -187,14 +220,22 @@
                         Content="About" 
                         Style="{StaticResource MenuButtonStyle}"
                         Command="{Binding AboutCommand}"/>
-
-                    <Button 
-                        Content="Logout" 
-                        Style="{StaticResource MenuButtonStyle}"
-                        Command="{Binding LogoutCommand}"
-                        Margin="10,30,10,10"/>
                 </StackPanel>
             </Grid>
+
+            <!-- Logout Button in the Bottom Row -->
+            <StackPanel Grid.Row="2"
+                Background="#3A3A3A" 
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Margin="0,10,0,30">
+
+                <Button 
+                    Content="Logout" 
+                    Style="{StaticResource MenuButtonStyle}"
+                    Command="{Binding LogoutCommand}"
+                    Margin="10,10,10,10"/>
+            </StackPanel>
         </Grid>
     </Border>
 </Window>
