@@ -11,9 +11,21 @@
 
   <ItemGroup>
     <Compile Remove="Model\**" />
+    <Compile Remove="res\set1\**" />
+    <Compile Remove="res\set2\**" />
+    <Compile Remove="res\set3\**" />
     <EmbeddedResource Remove="Model\**" />
+    <EmbeddedResource Remove="res\set1\**" />
+    <EmbeddedResource Remove="res\set2\**" />
+    <EmbeddedResource Remove="res\set3\**" />
     <None Remove="Model\**" />
+    <None Remove="res\set1\**" />
+    <None Remove="res\set2\**" />
+    <None Remove="res\set3\**" />
     <Page Remove="Model\**" />
+    <Page Remove="res\set1\**" />
+    <Page Remove="res\set2\**" />
+    <Page Remove="res\set3\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,9 +36,6 @@
 
   <ItemGroup>
     <Folder Include="Assets\" />
-    <Folder Include="res\set3\" />
-    <Folder Include="res\set2\" />
-    <Folder Include="res\set1\" />
   </ItemGroup>
 
 

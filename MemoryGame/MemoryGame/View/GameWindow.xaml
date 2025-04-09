@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MemoryGame.View"
         xmlns:vm="clr-namespace:MemoryGame.ViewModel"
+        xmlns:converters="clr-namespace:MemoryGame.Converters"
         mc:Ignorable="d"
         Title="memo" 
         Height="800" 
@@ -15,6 +16,8 @@
         WindowStyle="None">
 
     <Window.Resources>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
         <Style x:Key="GameButtonStyle" TargetType="Button">
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Padding" Value="10,5"/>

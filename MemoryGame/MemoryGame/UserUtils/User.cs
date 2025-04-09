@@ -38,6 +38,7 @@ namespace MemoryGame.Model
             {
                 _gamesWon = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(WinRate));
             }
         }
 
@@ -48,6 +49,7 @@ namespace MemoryGame.Model
             {
                 _gamesPlayed = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(WinRate));
             }
         }
 
@@ -62,9 +64,9 @@ namespace MemoryGame.Model
         }
 
         // INotifyPropertyChanged implementation
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

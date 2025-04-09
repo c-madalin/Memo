@@ -1,0 +1,106 @@
+{
+  "Category": "Animals",
+  "Rows": 4,
+  "Columns": 4,
+  "RemainingTime": 98,
+  "ElapsedTime": 22,
+  "TotalTime": 120,
+  "Cards": [
+    {
+      "Id": 7,
+      "ImagePath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\Images\\Animals\\cat.png",
+      "IsFlipped": false,
+      "IsMatched": false
+    },
+    {
+      "Id": 10,
+      "ImagePath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\Images\\Animals\\lion.png",
+      "IsFlipped": true,
+      "IsMatched": false
+    },
+    {
+      "Id": 8,
+      "ImagePath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\Images\\Animals\\elephant.png",
+      "IsFlipped": false,
+      "IsMatched": false
+    },
+    {
+      "Id": 15,
+      "ImagePath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\Images\\Animals\\horse.png",
+      "IsFlipped": false,
+      "IsMatched": false
+    },
+    {
+      "Id": 1,
+      "ImagePath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\Images\\Animals\\fox.png",
+      "IsFlipped": false,
+      "IsMatched": false
+    },
+    {
+      "Id": 9,
+      "ImagePath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\Images\\Animals\\elephant.png",
+      "IsFlipped": false,
+      "IsMatched": false
+    },
+    {
+      "Id": 6,
+      "ImagePath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\Images\\Animals\\cat.png",
+      "IsFlipped": false,
+      "IsMatched": false
+    },
+    {
+      "Id": 13,
+      "ImagePath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\Images\\Animals\\zebra.png",
+      "IsFlipped": false,
+      "IsMatched": false
+    },
+    {
+      "Id": 11,
+      "ImagePath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\Images\\Animals\\lion.png",
+      "IsFlipped": false,
+      "IsMatched": false
+    },
+    {
+      "Id": 3,
+      "ImagePath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\Images\\Animals\\rabbit.png",
+      "IsFlipped": true,
+      "IsMatched": true
+    },
+    {
+      "Id": 12,
+      "ImagePath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\Images\\Animals\\zebra.png",
+      "IsFlipped": false,
+      "IsMatched": false
+    },
+    {
+      "Id": 0,
+      "ImagePath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\Images\\Animals\\fox.png",
+      "IsFlipped": false,
+      "IsMatched": false
+    },
+    {
+      "Id": 14,
+      "ImagePath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\Images\\Animals\\horse.png",
+      "IsFlipped": false,
+      "IsMatched": false
+    },
+    {
+      "Id": 4,
+      "ImagePath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\Images\\Animals\\giraffe.png",
+      "IsFlipped": false,
+      "IsMatched": false
+    },
+    {
+      "Id": 5,
+      "ImagePath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\Images\\Animals\\giraffe.png",
+      "IsFlipped": false,
+      "IsMatched": false
+    },
+    {
+      "Id": 2,
+      "ImagePath": "C:\\FacultateFolder\\sem3\\MVP\\Memo\\MemoryGame\\MemoryGame\\res\\Images\\Animals\\rabbit.png",
+      "IsFlipped": true,
+      "IsMatched": true
+    }
+  ]
+}

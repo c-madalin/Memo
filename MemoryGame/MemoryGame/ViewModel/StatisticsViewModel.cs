@@ -5,7 +5,6 @@ using System.Windows.Input;
 using MemoryGame.Commands;
 using MemoryGame.Model;
 using MemoryGame.Services;
-using MemoryGame.View;
 
 namespace MemoryGame.ViewModel
 {
@@ -37,7 +36,7 @@ namespace MemoryGame.ViewModel
         {
             foreach (var window in System.Windows.Application.Current.Windows)
             {
-                if (window is StatisticsWindow statisticsWindow)
+                if (window is View.StatisticsWindow statisticsWindow)
                 {
                     statisticsWindow.Close();
                     break;
