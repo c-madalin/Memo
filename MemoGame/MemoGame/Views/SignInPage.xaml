@@ -93,6 +93,10 @@
         </Style>
     </Page.Resources>
 
+    <Page.DataContext>
+        <vm:SignInViewModel/>
+    </Page.DataContext>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -224,7 +228,7 @@
                 IsEnabled="{Binding IsUserSelected}"/>
             <Button 
                 Content="Exit" 
-                Command="{Binding ExitCommand}"
+                Click="ExitButton_Click"
                 Style="{StaticResource MainButtonStyle}"/>
         </StackPanel>
     </Grid>
