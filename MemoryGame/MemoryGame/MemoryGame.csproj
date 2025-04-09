@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AppDesignerFolder>Config</AppDesignerFolder>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="res\avatar\av1.jpg" />
+    <None Remove="res\avatar\av2.jpg" />
+    <None Remove="res\icon\brain.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Model\" />
+    <Folder Include="Assets\" />
+    <Folder Include="res\set3\" />
+    <Folder Include="res\set2\" />
+    <Folder Include="res\set1\" />
+  </ItemGroup>
+
+
+
+  <ItemGroup>
+    <Resource Include="res\avatar\av1.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="res\avatar\av2.jpg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="res\icon\brain.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+</Project>
